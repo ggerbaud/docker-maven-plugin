@@ -118,6 +118,10 @@ public class BuildMojo extends AbstractDockerMojo {
   @Parameter(property = "noCache", defaultValue = "false")
   private boolean noCache;
 
+  /** Set to false to pass the `--rm=false` flag to the Docker daemon when building an image. */
+  @Parameter(property = "rmOnBuild", defaultValue = "true")
+  private boolean rmOnBuild;
+
   /** Flag to push image after it is built. Defaults to false. */
   @Parameter(property = "pushImage", defaultValue = "false")
   private boolean pushImage;
@@ -778,6 +782,9 @@ public class BuildMojo extends AbstractDockerMojo {
     }
     if (noCache) {
       buildParams.add(DockerClient.BuildParam.noCache());
+    }
+    if(!rmOnBuild) {
+      buildParams.add(DockerClient.BuildParam.rm(false));
     }
     return buildParams.toArray(new DockerClient.BuildParam[buildParams.size()]);
   }

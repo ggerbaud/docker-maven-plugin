@@ -480,9 +480,21 @@ public class BuildMojoTest extends AbstractMojoTestCase {
     mojo.execute(docker);
 
     verify(docker).build(any(Path.class),
-        anyString(),
-        any(ProgressHandler.class),
-        eq(BuildParam.noCache()));
+            anyString(),
+            any(ProgressHandler.class),
+            eq(BuildParam.noCache()));
+  }
+
+  public void testRmOnBuild() throws Exception {
+    final BuildMojo mojo = setupMojo(getTestFile("src/test/resources/pom-build-no-rm.xml"));
+    final DockerClient docker = mock(DockerClient.class);
+
+    mojo.execute(docker);
+
+    verify(docker).build(any(Path.class),
+            anyString(),
+            any(ProgressHandler.class),
+            eq(BuildParam.rm(false)));
   }
   
   private BuildMojo setupMojo(final File pom) throws Exception {
